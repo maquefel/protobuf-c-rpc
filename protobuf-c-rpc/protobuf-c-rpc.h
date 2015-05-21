@@ -178,6 +178,14 @@ ProtobufC_RPC_Server *
                                        ProtobufCRPCDispatch       *dispatch /* or NULL */
                                       );
 
+ProtobufC_RPC_Server *
+protobuf_c_rpc_server_new_from_fd
+                    (ProtobufC_RPC_FD              listening_fd,
+                    ProtobufC_RPC_AddressType address_type,
+                    const char               *bind_name,
+                    ProtobufCService         *service,
+                    ProtobufCRPCDispatch       *orig_dispatch);
+
 ProtobufCService *
      protobuf_c_rpc_server_destroy    (ProtobufC_RPC_Server     *server,
                                        protobuf_c_boolean        free_underlying_service);

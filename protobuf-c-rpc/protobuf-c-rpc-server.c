@@ -602,12 +602,12 @@ handle_server_listener_readable (int fd,
   conn->first_pending_request = conn->last_pending_request = NULL;
   conn->server = server;
   GSK_LIST_APPEND (GET_CONNECTION_LIST (server), conn);
-  protobuf_c_rpc_dispatch_watch_fd (server->dispatch, conn->fd, PROTOBUF_C_RPC_EVENT_READABLE,
-                                handle_server_connection_events, conn);
+  protobuf_c_rpc_dispatch_watch_fd (server->dispatch, conn->fd, PROTOBUF_C_RPC_EVENT_READABLE, handle_server_connection_events, conn);
 }
 
-static ProtobufC_RPC_Server *
-server_new_from_fd (ProtobufC_RPC_FD              listening_fd,
+ProtobufC_RPC_Server *
+protobuf_c_rpc_server_new_from_fd
+                    (ProtobufC_RPC_FD              listening_fd,
                     ProtobufC_RPC_AddressType address_type,
                     const char               *bind_name,
                     ProtobufCService         *service,
@@ -753,7 +753,7 @@ protobuf_c_rpc_server_new       (ProtobufC_RPC_AddressType type,
                strerror (errno));
       return NULL;
     }
-  return server_new_from_fd (fd, type, name, service, dispatch);
+  return protobuf_c_rpc_server_new_from_fd(fd, type, name, service, dispatch);
 }
 
 ProtobufCService *
