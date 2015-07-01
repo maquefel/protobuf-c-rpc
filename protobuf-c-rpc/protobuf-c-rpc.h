@@ -33,6 +33,17 @@
 #include <protobuf-c-rpc/protobuf-c-rpc-dispatch.h>
 #include <protobuf-c-rpc/protobuf-c-rpc-data-buffer.h>
 
+/**
+ * The version of the protobuf-c-rpc headers, represented as a string using the same
+ * format as protobuf_c_rpc_version().
+ */
+#define PROTOBUF_C_RPC_VERSION		"0.0.1"
+
+/**
+ * The version of the protobuf-c-rpc headers, represented as an integer using the
+ * same format as protobuf_c_rpc_version_number().
+ */
+#define PROTOBUF_C_RPC_VERSION_NUMBER	1
 
 typedef enum
 {
@@ -217,5 +228,12 @@ void protobuf_c_rpc_server_configure_threading (ProtobufC_RPC_Server *server,
 void protobuf_c_rpc_server_set_error_handler (ProtobufC_RPC_Server *server,
                                               ProtobufC_RPC_Error_Func func,
                                               void                 *error_func_data);
+
+/* Version */
+const char *
+protobuf_c_rpc_version(void);
+
+uint32_t
+protobuf_c_rpc_version_number(void);
 
 #endif
