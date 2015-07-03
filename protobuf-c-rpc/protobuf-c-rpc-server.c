@@ -294,9 +294,12 @@ static void handle_server_connection_events (int fd,
                                              unsigned events,
                                              void *data);
 static void
-server_connection_response_closure (const ProtobufCMessage *message,
+server_connection_response_closure (const ProtobufCService* service,
+                                    const ProtobufCMessage *message,
                                     void                   *closure_data)
 {
+  service = service;
+
   ServerRequest *request = closure_data;
   ProtobufC_RPC_Server *server = request->server;
   protobuf_c_boolean must_proxy = 0;
@@ -473,8 +476,11 @@ handle_server_connection_events (int fd,
             ServerRequest *server_request = create_server_request (conn,
                                                                    payload.request_id,
                                                                    payload.method_index);
-            service->invoke (service, payload.method_index, payload.message,
-                             server_connection_response_closure, server_request);
+            service->invoke (service,
+                             payload.method_index,
+                             payload.message,
+                             server_connection_response_closure,
+                             server_request);
 
             /* clean up */
             if (payload.message)
@@ -535,8 +541,10 @@ server_deserialize (ProtobufCAllocator    *allocator,
                     ProtobufC_RPC_Get_Descriptor get_descriptor,
                     void *get_descriptor_data)
 {
+
    if (!allocator || !in_buffer || !payload)
       return PROTOBUF_C_RPC_PROTOCOL_STATUS_FAILED;
+
 
    uint32_t header[3];
    if (in_buffer->size < sizeof (header))

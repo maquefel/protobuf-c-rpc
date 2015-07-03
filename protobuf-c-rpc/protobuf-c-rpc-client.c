@@ -198,7 +198,7 @@ client_failed (ProtobufC_RPC_Client *client,
 
       for (i = 0; i < n_closures; i++)
         if (closures[i].response_type != NULL)
-          closures[i].closure (NULL, closures[i].closure_data);
+          closures[i].closure (&client->base_service, NULL, closures[i].closure_data);
       client->allocator->free (client->allocator, closures);
     }
 }
@@ -567,7 +567,7 @@ handle_client_fd_events (int                fd,
 
               /* invoke closure */
               Closure *closure = client->info.connected.closures + (payload.request_id - 1);
-              closure->closure (payload.message, closure->closure_data);
+              closure->closure(&client->base_service, payload.message, closure->closure_data);
               closure->response_type = NULL;
               closure->closure = NULL;
               closure->closure_data = UINT_TO_POINTER (client->info.connected.first_free_request_id);
@@ -728,7 +728,7 @@ invoke_client_rpc (ProtobufCService *service,
     case PROTOBUF_C_RPC_CLIENT_STATE_FAILED_WAITING:
     case PROTOBUF_C_RPC_CLIENT_STATE_FAILED:
     case PROTOBUF_C_RPC_CLIENT_STATE_DESTROYED:
-      closure (NULL, closure_data);
+      closure (NULL, NULL, closure_data);
       break;
     }
 }
@@ -784,7 +784,7 @@ destroy_client_rpc (ProtobufCService *service)
   /* free closures only once we are in the destroyed state */
   for (i = 0; i < n_closures; i++)
     if (closures[i].response_type != NULL)
-      closures[i].closure (NULL, closures[i].closure_data);
+      closures[i].closure (&client->base_service, NULL, closures[i].closure_data);
   if (closures)
     client->allocator->free (client->allocator, closures);
 
